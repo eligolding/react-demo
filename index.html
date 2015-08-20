@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Tweeter</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <script src="./jquery-1.11.3.min.js"></script>
+    <script src="./bootstrap.min.js"></script>
+    <style type="text/css">
+        body { background: #F5F8FA; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>Tweeter</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-3 panel panel-default">
+            <div class="panel-heading panel-title">Eli Golding</div>
+        </div>
+        <div class="col-md-6 well">
+            <textarea id="tweet-box" class="form-control"></textarea>
+            <br/>
+            <span id="remaining-chars">140</span>
+            <button id="tweet-btn" class="btn btn-primary pull-right" disabled>Tweet</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+            <ul id="tweet-list" class="list-group">
+
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    $('#tweet-box').on('input', function () {
+        var valueLength = $(this).val().length;
+        var remainingChars = 140 - valueLength;
+        $('#remaining-chars').text(remainingChars);
+        $('#tweet-btn').prop('disabled', !valueLength);
+        var textColor = remainingChars < 0 ? 'red' : 'black';
+        $('#remaining-chars').css('color', textColor);
+    });
+
+    $('#tweet-btn').on('click', function () {
+        var $tweetBox = $('#tweet-box');
+        var newTweet =
+            '<li class="list-group-item clearfix">' +
+                '<div class="pull-left" style="margin-right: 10px"><img src="http://www.gravatar.com/avatar/ecbcfd9ce849af543b91a23cd8267737"></div>' +
+                '<p class="list-group-item-text panel-heading">Eli Golding ' + (new Date()).toLocaleDateString() + ' ' + (new Date()).toLocaleTimeString() + '</p>' +
+                '<p class="list-group-item-heading">' + $tweetBox.val() + '</p>' +
+                '<a class="delete pull-right">delete</a>' +
+            '</li>';
+
+        $('#tweet-list').append(newTweet);
+        $tweetBox.val('').focus();
+        $('#remaining-chars').text(140);
+        $(this).prop('disabled', true);
+    });
+
+    $('#tweet-list').on('click', '.delete', function () {
+        $(this).closest('li').remove();
+        $('#tweet-box').focus();
+    });
+</script>
+</body>
+</html>
