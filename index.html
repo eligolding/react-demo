@@ -92,13 +92,13 @@
                 username: user.username,
                 email: user.email,
                 dateTime: (new Date()).toLocaleDateString() + ' ' + (new Date()).toLocaleTimeString(),
-                msg: $tweetBox.val()
+                msg: $tweetBox.val().substring(0, 140)
             };
 
             appendNewTweet(tweet);
 
             $tweetBox.val('').focus();
-            $('#remaining-chars').text(140);
+            $('#remaining-chars').text(140).css('color', 'black');
             $(this).prop('disabled', true);
         });
 
@@ -107,7 +107,7 @@
                     '<li class="list-group-item clearfix">' +
                     '<div class="pull-left" style="margin-right: 10px"><img src="http://www.gravatar.com/avatar/' + md5(tweet.email) + '"></div>' +
                     '<p class="list-group-item-text panel-heading">' + tweet.username + ' ' + tweet.dateTime + '</p>' +
-                    '<p class="list-group-item-heading">' + tweet.msg + '</p>' +
+                    '<p class="list-group-item-heading lead">' + tweet.msg + '</p>' +
                     '<a class="delete pull-right">delete</a>' +
                     '</li>';
 
