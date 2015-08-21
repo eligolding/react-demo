@@ -30,10 +30,7 @@
         <div class="col-md-6 well" id="tweet-box-container"></div>
     </div>
     <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-            <ul id="tweet-list" class="list-group">
-
-            </ul>
+        <div class="col-md-offset-3 col-md-6" id="tweet-list" >
         </div>
     </div>
 </div>
@@ -75,16 +72,36 @@
         }
     });
 
-    function appendNewTweet(tweet) {
-        var newTweet =
-                '<li class="list-group-item clearfix">' +
-                '<div class="pull-left" style="margin-right: 10px"><img src="http://www.gravatar.com/avatar/' + md5(tweet.email) + '"></div>' +
-                '<p class="small">' + tweet.username + ' ' + tweet.dateTime + '</p>' +
-                '<p class="lead">' + tweet.msg + '</p>' +
-                '<a class="delete pull-right">delete</a>' +
-                '</li>';
+    var TweetList = React.createClass({
+        render: function () {
+            var tweets = this.props.tweets.map(function (tweet) {
+                var avatar = 'http://www.gravatar.com/avatar/' + md5(tweet.email);
+                return (
+                    <li className="list-group-item clearfix">
+                        <div className="pull-left" style={{marginRight: '10px'}}>
+                            <img src={avatar} />
+                        </div>
+                        <p className="small">{tweet.username} {tweet.dateTime}</p>
+                        <p className="lead">{tweet.msg}</p>
+                        <a className="delete pull-right">delete</a>
+                    </li>
+                    );
+            });
+            return (
+                <ul className="list-group">
+                    {tweets}
+                </ul>
+            )
+        }
+    });
 
-        $('#tweet-list').prepend(newTweet);
+    var tweets = [];
+
+    function appendNewTweet(tweet) {
+
+        tweets.unshift(tweet);
+
+        React.render(<TweetList tweets={tweets} />, document.getElementById('tweet-list'));
     }
 
     $(function () {
