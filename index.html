@@ -72,21 +72,51 @@
         }
     });
 
+    var Tweet = React.createClass({
+        handleDelete: function () {
+            this.props.onDelete(this.props.dateTime);
+        },
+        render: function() {
+            return (
+                <li className="list-group-item clearfix">
+                    <div className="pull-left" style={{marginRight: '10px'}}>
+                        <img src={this.props.avatar} />
+                    </div>
+                    <p className="small">{this.props.username} {this.props.dateTime}</p>
+                    <p className="lead">{this.props.msg}</p>
+                    <a className="delete pull-right" onClick={this.handleDelete}>delete</a>
+                </li>
+            );
+        }
+    });
+
     var TweetList = React.createClass({
-        render: function () {
-            var tweets = this.props.tweets.map(function (tweet) {
-                var avatar = 'http://www.gravatar.com/avatar/' + md5(tweet.email);
-                return (
-                    <li className="list-group-item clearfix">
-                        <div className="pull-left" style={{marginRight: '10px'}}>
-                            <img src={avatar} />
-                        </div>
-                        <p className="small">{tweet.username} {tweet.dateTime}</p>
-                        <p className="lead">{tweet.msg}</p>
-                        <a className="delete pull-right">delete</a>
-                    </li>
-                    );
+        getInitialState: function () {
+            return {
+                tweets: this.props.tweets
+            }
+        },
+        deleteTweet: function (dateTime) {
+            console.log('deleted: ' + dateTime);
+            var tweets = this.state.tweets.filter(function(tweet) {
+                console.log(tweet);
+                return tweet.dateTime !== dateTime;
             });
+            this.setState({
+                tweets: tweets
+            });
+        },
+        render: function () {
+            var tweets = this.state.tweets.map(function (tweet) {
+                return <Tweet
+                    username={tweet.username}
+                    dateTime={tweet.dateTime}
+                    avatar={tweet.avatar}
+                    msg={tweet.msg}
+                    onDelete={this.deleteTweet}
+                    />;
+            }.bind(this));
+
             return (
                 <ul className="list-group">
                     {tweets}
@@ -95,31 +125,31 @@
         }
     });
 
-    var tweets = [];
+    var renderedTweetList;
 
     function appendNewTweet(tweet) {
 
-        tweets.unshift(tweet);
+        if (renderedTweetList) {
+            renderedTweetList.setState(function(state) {
+                return {tweets: state.tweets.reverse().concat(tweet).reverse()};
+            });
+        }
 
-        React.render(<TweetList tweets={tweets} />, document.getElementById('tweet-list'));
+        renderedTweetList = React.render(<TweetList tweets={[tweet]} />, document.getElementById('tweet-list'));
     }
 
     $(function () {
 
         var user = {
             name: 'Eli Golding',
-            email: 'eligolding@gmail.com'
+            email: 'eligolding@gmail.com',
+            avatar: 'http://www.gravatar.com/avatar/' + md5('eligolding@gmail.com')
         };
 
         $('#name').text(user.name);
-        $('#avatar').prop('src', 'http://www.gravatar.com/avatar/' + md5(user.email));
+        $('#avatar').prop('src', user.avatar);
 
         React.render(<TwitterBox user={user} onTweet={appendNewTweet} />, $('#tweet-box-container')[0]);
-
-        $('#tweet-list').on('click', '.delete', function () {
-            $(this).closest('li').remove();
-            $('#tweet-box').focus();
-        });
     });
 </script>
 </body>
