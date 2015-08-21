@@ -45,20 +45,33 @@
     });
 
     $('#tweet-btn').on('click', function () {
-        var $tweetBox = $('#tweet-box');
-        var newTweet =
-            '<li class="list-group-item clearfix">' +
-                '<div class="pull-left" style="margin-right: 10px"><img src="http://www.gravatar.com/avatar/ecbcfd9ce849af543b91a23cd8267737"></div>' +
-                '<p class="list-group-item-text panel-heading">Eli Golding ' + (new Date()).toLocaleDateString() + ' ' + (new Date()).toLocaleTimeString() + '</p>' +
-                '<p class="list-group-item-heading">' + $tweetBox.val() + '</p>' +
-                '<a class="delete pull-right">delete</a>' +
-            '</li>';
 
-        $('#tweet-list').append(newTweet);
+        var $tweetBox = $('#tweet-box');
+
+        var tweet = {
+            username: 'Eli Golding',
+            dateTime: (new Date()).toLocaleDateString() + ' ' + (new Date()).toLocaleTimeString(),
+            msg: $tweetBox.val()
+        };
+
+        appendNewTweet(tweet);
+
         $tweetBox.val('').focus();
         $('#remaining-chars').text(140);
         $(this).prop('disabled', true);
     });
+
+    function appendNewTweet(tweet) {
+        var newTweet =
+            '<li class="list-group-item clearfix">' +
+                '<div class="pull-left" style="margin-right: 10px"><img src="http://www.gravatar.com/avatar/ecbcfd9ce849af543b91a23cd8267737"></div>' +
+                '<p class="list-group-item-text panel-heading">' + tweet.username + ' ' + tweet.dateTime + '</p>' +
+                '<p class="list-group-item-heading">' + tweet.msg + '</p>' +
+                '<a class="delete pull-right">delete</a>' +
+            '</li>';
+
+        $('#tweet-list').prepend(newTweet);
+    }
 
     $('#tweet-list').on('click', '.delete', function () {
         $(this).closest('li').remove();
