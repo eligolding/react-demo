@@ -28,8 +28,8 @@ var App = React.createClass({
         </div>
         <div className="row">
           <div className="col-md-3 panel panel-default">
-            <div className="clearfix">
-              <div className="pull-left"><img src={this.props.user.avatar} /></div>
+            <div className="clearfix" style={{padding: '10px 0'}}>
+              <div className="pull-left" style={{marginRight: '7px'}}><img src={this.props.user.avatar} /></div>
               <div>{this.props.user.name}</div>
             </div>
           </div>
