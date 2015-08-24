@@ -56,6 +56,7 @@ var TwitterBox = React.createClass({
   handleTweet: function () {
     this.props.onTweet(this.state.msg.substring(0, 140));
     this.setState({msg: ''});
+    React.findDOMNode(this.refs.tweetBox).focus();
   },
   handleInput: function(e) {
     this.setState({msg: e.target.value});
@@ -66,10 +67,10 @@ var TwitterBox = React.createClass({
     };
     return (
       <fieldset disabled={!!this.props.user.length}>
-        <textarea onChange={this.handleInput} id="tweet-box" className="form-control" value={this.state.msg}></textarea>
+        <textarea onChange={this.handleInput} ref="tweetBox" className="form-control" value={this.state.msg}></textarea>
         <br/>
-        <span id="remaining-chars" style={style}>{140 - this.state.msg.length}</span>
-        <button onClick={this.handleTweet} id="tweet-btn" className="btn btn-primary pull-right" disabled={!this.state.msg > 0}>
+        <span style={style}>{140 - this.state.msg.length}</span>
+        <button onClick={this.handleTweet} className="btn btn-primary pull-right" disabled={!this.state.msg > 0}>
           Tweet
         </button>
       </fieldset>
