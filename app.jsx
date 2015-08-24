@@ -1,10 +1,17 @@
 var App = React.createClass({
-  addTweet: function(tweet) {
+  addTweet: function(msg) {
+    var tweet = {
+      username: this.props.user.name,
+      email: this.props.user.email,
+      avatar: this.props.user.avatar,
+      dateTime: (new Date()).toLocaleDateString() + ' ' + (new Date()).toLocaleTimeString(),
+      msg: msg.substring(0, 140)
+    };
     this.setState({tweets: this.state.tweets.reverse().concat(tweet).reverse()});
   },
-  deleteTweet: function(dateTime) {
+  deleteTweet: function(deletedTweet) {
     var tweets = this.state.tweets.filter(function(tweet) {
-      return tweet.dateTime !== dateTime;
+      return tweet.msg !== deletedTweet.msg && tweet.dateTime !== deletedTweet.dateTime;
     });
     this.setState({tweets: tweets});
   },
@@ -47,17 +54,10 @@ var TwitterBox = React.createClass({
     };
   },
   handleTweet: function () {
-    var tweet = {
-      username: this.props.user.name,
-      email: this.props.user.email,
-      avatar: this.props.user.avatar,
-      dateTime: (new Date()).toLocaleDateString() + ' ' + (new Date()).toLocaleTimeString(),
-      msg: this.state.msg.substring(0, 140)
-    };
-    this.props.onTweet(tweet);
+    this.props.onTweet(this.state.msg.substring(0, 140));
     this.setState({msg: ''});
   },
-  handleChange: function(e) {
+  handleInput: function(e) {
     this.setState({msg: e.target.value});
   },
   render: function() {
@@ -66,7 +66,7 @@ var TwitterBox = React.createClass({
     };
     return (
       <fieldset disabled={!!this.props.user.length}>
-        <textarea onChange={this.handleChange} id="tweet-box" className="form-control" value={this.state.msg}></textarea>
+        <textarea onChange={this.handleInput} id="tweet-box" className="form-control" value={this.state.msg}></textarea>
         <br/>
         <span id="remaining-chars" style={style}>{140 - this.state.msg.length}</span>
         <button onClick={this.handleTweet} id="tweet-btn" className="btn btn-primary pull-right" disabled={!this.state.msg > 0}>
@@ -77,39 +77,22 @@ var TwitterBox = React.createClass({
   }
 });
 
-var Tweet = React.createClass({
-  handleDelete: function () {
-    this.props.onDelete(this.props.dateTime);
-  },
-  render: function() {
-    return (
-      <li className="list-group-item clearfix">
-        <div className="pull-left" style={{marginRight: '10px'}}>
-          <img src={this.props.avatar} />
-        </div>
-        <p className="small">{this.props.username} {this.props.dateTime}</p>
-        <p className="lead">{this.props.msg}</p>
-        <a className="delete pull-right" onClick={this.handleDelete}>delete</a>
-      </li>
-    );
-  }
-});
-
 var TweetList = React.createClass({
   render: function () {
-    var tweets = this.props.tweets.map(function (tweet) {
-      return <Tweet
-        username={tweet.username}
-        dateTime={tweet.dateTime}
-        avatar={tweet.avatar}
-        msg={tweet.msg}
-        onDelete={this.props.onDelete}
-        />;
-    }.bind(this));
-
     return (
       <ul className="list-group">
-        {tweets}
+        {this.props.tweets.map(function (tweet) {
+          return (
+            <li key={tweet.dateTime} className="list-group-item clearfix">
+              <div className="pull-left" style={{marginRight: '10px'}}>
+                <img src={tweet.avatar} />
+              </div>
+              <p className="small">{tweet.username} {tweet.dateTime}</p>
+              <p className="lead">{tweet.msg}</p>
+              <a className="delete pull-right" onClick={this.props.onDelete.bind(null, tweet)}>delete</a>
+            </li>
+          );
+        }.bind(this))}
       </ul>
     )
   }
