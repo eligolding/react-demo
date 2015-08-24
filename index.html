@@ -72,14 +72,6 @@
                 msg: $tweetBox.val().substring(0, 140)
             };
 
-            appendNewTweet(tweet);
-
-            $tweetBox.val('').focus();
-            $('#remaining-chars').text(140).css('color', 'black');
-            $(this).prop('disabled', true);
-        });
-
-        function appendNewTweet(tweet) {
             var newTweet =
                 '<li class="list-group-item clearfix">' +
                     '<div class="pull-left" style="margin-right: 10px"><img src="' + tweet.avatar + '"></div>' +
@@ -89,7 +81,11 @@
                 '</li>';
 
             $('#tweet-list').prepend(newTweet);
-        }
+
+            $tweetBox.val('').focus();
+            $('#remaining-chars').text(140).css('color', 'black');
+            $(this).prop('disabled', true);
+        });
 
         $('#tweet-list').on('click', '.delete', function () {
             $(this).closest('li').remove();
