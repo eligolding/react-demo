@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="assets/bootstrap.min.css">
     <script src="assets/jquery-1.11.3.min.js"></script>
     <script src="assets/bootstrap.min.js"></script>
-    <script src="assets/md5.min.js"></script>
     <style type="text/css">
         body {
             background: #F5F8FA;
@@ -20,25 +19,13 @@
     </div>
     <div class="row">
         <div class="col-md-3 panel panel-default">
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="username">Name</label>
-                    <input type="text" class="form-control" name="username" id="username" required/>
-                </div>
-                <div class="form-group">
-                    <label for="username">Email</label>
-                    <input type="email" class="form-control" name="email" id="email" required/>
-                </div>
-                <button id="login" class="btn btn-primary pull-right">Login</button>
-            </form>
-            <div id="userInfo" hidden class="clearfix">
+            <div id="userInfo" class="clearfix">
                 <div class="pull-left"><img id="avatar" /></div>
                 <div id="name"></div>
-                <button id="logout" class="btn btn-primary">Logout</button>
             </div>
         </div>
         <div class="col-md-6 well">
-            <textarea id="tweet-box" class="form-control" disabled></textarea>
+            <textarea id="tweet-box" class="form-control"></textarea>
             <br/>
             <span id="remaining-chars">140</span>
             <button id="tweet-btn" class="btn btn-primary pull-right" disabled>Tweet</button>
@@ -55,25 +42,14 @@
 <script>
     $(function () {
 
-        var user = {};
+        var user = {
+            name: 'Eli Golding',
+            email: 'eligolding@gmail.com',
+            avatar: 'http://www.gravatar.com/avatar/ecbcfd9ce849af543b91a23cd8267737'
+        };
 
-        $('#login-form').on('submit', function(e) {
-            e.preventDefault();
-            user.username = $('#username').val();
-            user.email = $('#email').val();
-            $('#tweet-box').prop('disabled', false);
-            $('#userInfo').show();
-            $(this).hide();
-            $('#name').text(user.username);
-            $('#avatar').prop('src', 'http://www.gravatar.com/avatar/' + md5(user.email));
-        });
-
-        $('#logout').on('click', function() {
-            user = {};
-            $('#tweet-box').prop('disabled', true);
-            $('#userInfo').hide();
-            $('#login-form').show();
-        });
+        $('#name').text(user.name);
+        $('#avatar').prop('src', user.avatar);
 
         $('#tweet-box').on('input', function () {
             var valueLength = $(this).val().length;
@@ -89,8 +65,9 @@
             var $tweetBox = $('#tweet-box');
 
             var tweet = {
-                username: user.username,
+                username: user.name,
                 email: user.email,
+                avatar: user.avatar,
                 dateTime: (new Date()).toLocaleDateString() + ' ' + (new Date()).toLocaleTimeString(),
                 msg: $tweetBox.val().substring(0, 140)
             };
@@ -104,12 +81,12 @@
 
         function appendNewTweet(tweet) {
             var newTweet =
-                    '<li class="list-group-item clearfix">' +
-                    '<div class="pull-left" style="margin-right: 10px"><img src="http://www.gravatar.com/avatar/' + md5(tweet.email) + '"></div>' +
+                '<li class="list-group-item clearfix">' +
+                    '<div class="pull-left" style="margin-right: 10px"><img src="' + tweet.avatar + '"></div>' +
                     '<p class="small">' + tweet.username + ' ' + tweet.dateTime + '</p>' +
                     '<p class="lead">' + tweet.msg + '</p>' +
                     '<a class="delete pull-right">delete</a>' +
-                    '</li>';
+                '</li>';
 
             $('#tweet-list').prepend(newTweet);
         }
