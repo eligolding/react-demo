@@ -105,4 +105,4 @@ var user = {
   avatar: 'http://www.gravatar.com/avatar/ecbcfd9ce849af543b91a23cd8267737'
 };
 
-React.render(<App user={user} />, document.body);
+React.render(<App user={user} />, document.getElementById('content'));
