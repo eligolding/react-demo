@@ -44,21 +44,25 @@ var user = {
     avatar: 'http://www.gravatar.com/avatar/ecbcfd9ce849af543b91a23cd8267737'
 };
 
+var userNameEl = document.getElementById('name');
+var avatarEl = document.getElementById('avatar');
+var tweetBox = document.getElementById('tweet-box');
+var tweetButton = document.getElementById('tweet-btn');
+var remainingCharsDisplay = document.getElementById('remaining-chars');
+var tweetList = document.getElementById('tweet-list');
 
-document.getElementById('name').innerText = user.name;
-document.getElementById('avatar').src = user.avatar;
+userNameEl.innerText = user.name;
+avatarEl.src = user.avatar;
 
-document.getElementById('tweet-box').addEventListener('input', function () {
+tweetBox.addEventListener('input', function () {
     var valueLength = this.value.length;
     var remainingChars = 140 - valueLength;
-    document.getElementById('remaining-chars').innerText = remainingChars;
-    document.getElementById('tweet-btn').disabled = !valueLength;
-    document.getElementById('remaining-chars').style.color = remainingChars < 0 ? 'red' : 'black';
+    remainingCharsDisplay.innerText = remainingChars;
+    tweetButton.disabled = !valueLength;
+    remainingCharsDisplay.style.color = remainingChars < 0 ? 'red' : 'black';
 });
 
-document.getElementById('tweet-btn').addEventListener('click', function () {
-
-    var tweetBox = document.getElementById('tweet-box');
+tweetButton.addEventListener('click', function () {
 
     var tweet = {
         username: user.name,
@@ -77,26 +81,24 @@ document.getElementById('tweet-btn').addEventListener('click', function () {
             '<p class="lead">' + tweet.msg + '</p>' +
             '<a class="delete pull-right">delete</a>';
 
-    var tweetList = document.getElementById('tweet-list');
     tweetList.insertBefore(newTweetEl, tweetList.firstChild);
 
     tweetBox.value = '';
     tweetBox.focus();
-    var remainingChars = document.getElementById('remaining-chars');
-    remainingChars.innerText = '140';
-    remainingChars.style.color = 'black';
+    remainingCharsDisplay.innerText = '140';
+    remainingCharsDisplay.style.color = 'black';
 
     this.disabled = true;
 });
 
-document.getElementById('tweet-list').addEventListener('click', function (e) {
+tweetList.addEventListener('click', function (e) {
     var target = e.target;
     if (target.className.indexOf('delete') < 0) {
         return false;
     }
     var tweet = target.parentNode;
     this.removeChild(tweet);
-    document.getElementById('tweet-box').focus();
+    tweetBox.focus();
 });
 </script>
 </body>
