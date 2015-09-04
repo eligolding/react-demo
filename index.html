@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <title>Tweeter</title>
     <link rel="stylesheet" href="assets/bootstrap.min.css">
-    <script src="assets/jquery-1.11.3.min.js"></script>
-    <script src="assets/bootstrap.min.js"></script>
     <style type="text/css">
         body {
             background: #F5F8FA;
@@ -40,58 +38,66 @@
     </div>
 </div>
 <script>
-    $(function () {
+var user = {
+    name: 'Eli Golding',
+    email: 'eligolding@gmail.com',
+    avatar: 'http://www.gravatar.com/avatar/ecbcfd9ce849af543b91a23cd8267737'
+};
 
-        var user = {
-            name: 'Eli Golding',
-            email: 'eligolding@gmail.com',
-            avatar: 'http://www.gravatar.com/avatar/ecbcfd9ce849af543b91a23cd8267737'
-        };
 
-        $('#name').text(user.name);
-        $('#avatar').prop('src', user.avatar);
+document.getElementById('name').innerText = user.name;
+document.getElementById('avatar').src = user.avatar;
 
-        $('#tweet-box').on('input', function () {
-            var valueLength = $(this).val().length;
-            var remainingChars = 140 - valueLength;
-            $('#remaining-chars').text(remainingChars);
-            $('#tweet-btn').prop('disabled', !valueLength);
-            var textColor = remainingChars < 0 ? 'red' : 'black';
-            $('#remaining-chars').css('color', textColor);
-        });
+document.getElementById('tweet-box').addEventListener('input', function () {
+    var valueLength = this.value.length;
+    var remainingChars = 140 - valueLength;
+    document.getElementById('remaining-chars').innerText = remainingChars;
+    document.getElementById('tweet-btn').disabled = !valueLength;
+    document.getElementById('remaining-chars').style.color = remainingChars < 0 ? 'red' : 'black';
+});
 
-        $('#tweet-btn').on('click', function () {
+document.getElementById('tweet-btn').addEventListener('click', function () {
 
-            var $tweetBox = $('#tweet-box');
+    var tweetBox = document.getElementById('tweet-box');
 
-            var tweet = {
-                username: user.name,
-                email: user.email,
-                avatar: user.avatar,
-                dateTime: (new Date()).toLocaleDateString() + ' ' + (new Date()).toLocaleTimeString(),
-                msg: $tweetBox.val().substring(0, 140)
-            };
+    var tweet = {
+        username: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        dateTime: (new Date()).toLocaleDateString() + ' ' + (new Date()).toLocaleTimeString(),
+        msg: tweetBox.value.substring(0, 140)
+    };
 
-            var newTweet =
-                '<li class="list-group-item clearfix">' +
-                    '<div class="pull-left" style="margin-right: 10px"><img src="' + tweet.avatar + '"></div>' +
-                    '<p class="small">' + tweet.username + ' ' + tweet.dateTime + '</p>' +
-                    '<p class="lead">' + tweet.msg + '</p>' +
-                    '<a class="delete pull-right">delete</a>' +
-                '</li>';
+    var newTweetEl = document.createElement('li');
+    newTweetEl.setAttribute('class', 'list-group-item clearfix');
 
-            $('#tweet-list').prepend(newTweet);
+    newTweetEl.innerHTML =
+            '<div class="pull-left" style="margin-right: 10px"><img src="' + tweet.avatar + '"></div>' +
+            '<p class="small">' + tweet.username + ' ' + tweet.dateTime + '</p>' +
+            '<p class="lead">' + tweet.msg + '</p>' +
+            '<a class="delete pull-right">delete</a>';
 
-            $tweetBox.val('').focus();
-            $('#remaining-chars').text(140).css('color', 'black');
-            $(this).prop('disabled', true);
-        });
+    var tweetList = document.getElementById('tweet-list');
+    tweetList.insertBefore(newTweetEl, tweetList.firstChild);
 
-        $('#tweet-list').on('click', '.delete', function () {
-            $(this).closest('li').remove();
-            $('#tweet-box').focus();
-        });
-    });
+    tweetBox.value = '';
+    tweetBox.focus();
+    var remainingChars = document.getElementById('remaining-chars');
+    remainingChars.innerText = '140';
+    remainingChars.style.color = 'black';
+
+    this.disabled = true;
+});
+
+document.getElementById('tweet-list').addEventListener('click', function (e) {
+    var target = e.target;
+    if (target.className.indexOf('delete') < 0) {
+        return false;
+    }
+    var tweet = target.parentNode;
+    this.removeChild(tweet);
+    document.getElementById('tweet-box').focus();
+});
 </script>
 </body>
 </html>
