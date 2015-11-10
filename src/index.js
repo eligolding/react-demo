@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 var App = React.createClass({
   addTweet: function(msg) {
     var tweet = {
@@ -105,4 +108,4 @@ var user = {
   avatar: 'http://www.gravatar.com/avatar/ecbcfd9ce849af543b91a23cd8267737'
 };
 
-React.render(<App user={user} />, document.getElementById('content'));
+ReactDOM.render(<App user={user} />, document.getElementById('content'));
