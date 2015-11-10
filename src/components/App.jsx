@@ -5,27 +5,6 @@ import TwitterBox from './TwitterBox';
 import TweetList from './TweetList';
 
 const App = React.createClass({
-  addTweet: function(msg) {
-    var tweet = {
-      username: this.props.user.name,
-      email: this.props.user.email,
-      avatar: this.props.user.avatar,
-      dateTime: (new Date()).toLocaleDateString() + ' ' + (new Date()).toLocaleTimeString(),
-      msg: msg.substring(0, 140)
-    };
-    this.setState({tweets: this.state.tweets.reverse().concat(tweet).reverse()});
-  },
-  deleteTweet: function(deletedTweet) {
-    var tweets = this.state.tweets.filter(function(tweet) {
-      return tweet.msg !== deletedTweet.msg && tweet.dateTime !== deletedTweet.dateTime;
-    });
-    this.setState({tweets: tweets});
-  },
-  getInitialState: function() {
-    return {
-      tweets: []
-    }
-  },
   render: function() {
     return (
       <div className="container">
@@ -40,12 +19,12 @@ const App = React.createClass({
             </div>
           </div>
           <div className="col-md-6 well">
-            <TwitterBox user={this.props.user} onTweet={this.addTweet} />
+            <TwitterBox user={this.props.user} onTweet={this.props.addTweet} />
           </div>
         </div>
         <div className="row">
           <div className="col-md-offset-3 col-md-6">
-            <TweetList tweets={this.state.tweets} onDelete={this.deleteTweet}/>
+            <TweetList tweets={this.props.tweets} onDelete={this.props.removeTweet}/>
           </div>
         </div>
       </div>
