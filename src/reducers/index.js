@@ -1,4 +1,3 @@
-
 export default function(state = {}, action = {}) {
   switch (action.type) {
     case 'ADD_TWEET':
@@ -21,7 +20,7 @@ function addTweet(state, msg) {
 
   return  {
     ...state,
-    tweets: state.tweets.reverse().concat(tweet).reverse()
+    tweets: [tweet, ...state.tweets]
   };
 }
 
